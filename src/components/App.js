@@ -1,7 +1,7 @@
 import Header from "./header";
 function App() {
   return (
-    <div style={{ textAlign: "center" }}>
+    <div>
       <Header />
     </div>
   );
