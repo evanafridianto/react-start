@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "../pages/Home";
 import About from "../pages/About";
-import Creation from "../pages/Creation";
+import Portfolio from "../pages/Portfolio";
 import Contact from "../pages/Contact";
 export default class Header extends Component {
   render() {
@@ -32,8 +32,8 @@ export default class Header extends Component {
                         </Nav.Link>
                       </Nav.Item>
                       <Nav.Item></Nav.Item>
-                      <Nav.Link as={Link} to={"/creation"}>
-                        Creation
+                      <Nav.Link as={Link} to={"/portfolio"}>
+                        Portfolio
                       </Nav.Link>
                       <Nav.Item>
                         <Nav.Link as={Link} to={"/contact"}>
@@ -46,12 +46,14 @@ export default class Header extends Component {
               </Navbar>
             </>
             <div>
-              <Routes>
-                <Route path="/home" element={<Home />}></Route>
-                <Route path="/about" element={<About />}></Route>
-                <Route path="/creation" element={<Creation />}></Route>
-                <Route path="/contact" element={<Contact />}></Route>
-              </Routes>
+              <Container className="p-5 text-center">
+                <Routes>
+                  <Route path="/home" element={<Home />}></Route>
+                  <Route path="/about" element={<About />}></Route>
+                  <Route path="/portfolio" element={<Portfolio />}></Route>
+                  <Route path="/contact" element={<Contact />}></Route>
+                </Routes>
+              </Container>
             </div>
           </div>
         </div>
