@@ -1,9 +1,11 @@
 import Header from "./header";
+import Footer from "./footer";
 function App() {
   return (
-    <div>
+    <>
       <Header />
-    </div>
+      <Footer />
+    </>
   );
 }
 export default App;

@@ -1,19 +1,11 @@
 import React, { Component } from "react";
-import { Card, Button } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 export default class Creation extends Component {
   render() {
     return (
-      <Card style={{ width: "18rem" }}>
-        <Card.Img variant="top" src="holder.js/100px180" />
-        <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </Card.Text>
-          <Button variant="primary">Creation</Button>
-        </Card.Body>
-      </Card>
+      <Container fluid className="p-5">
+        <h1 className="display-4 fw-bold">Creation Page</h1>
+      </Container>
     );
   }
 }
