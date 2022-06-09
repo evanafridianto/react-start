@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Container, Button, Row, Col } from "react-bootstrap";
+import {
+  Container,
+  Button,
+  Form,
+  Modal,
+  Figure,
+  ModalBody,
+} from "react-bootstrap";
 import Card from "../components/Card";
 export default class Movies extends Component {
   constructor() {
@@ -43,6 +50,7 @@ export default class Movies extends Component {
             "https://upload.wikimedia.org/wikipedia/id/1/17/Laskar_Pelangi_film.jpg",
         },
       ],
+      modalOpen: false,
       action: "",
       id: "",
       title: "",
@@ -53,7 +61,41 @@ export default class Movies extends Component {
       selectedItem: null,
     };
   }
+
+  openModal = () => this.setState({ modalOpen: true });
+  closeModal = () => this.setState({ modalOpen: false });
+  resetForm = () => {
+    this.setState({
+      id: Math.random(1, 10000000),
+      title: "",
+      production: "",
+      director: "",
+      year: "",
+      cover: "",
+      action: "insert",
+    });
+  };
+  Add = () => {
+    this.openModal();
+    this.resetForm();
+  };
+  Edit = (data) => {
+    this.openModal();
+    this.setState({
+      id: data.id,
+      title: data.title,
+      production: data.production,
+      director: data.director,
+      year: data.year,
+      cover: data.cover,
+      action: "update",
+    });
+  };
   render() {
+    var year = [];
+    for (let i = new Date().getFullYear(); i >= 1800; i--) {
+      year.push(<option value="{i}">{i}</option>);
+    }
     return (
       <>
         <div className="album">
@@ -74,6 +116,72 @@ export default class Movies extends Component {
                 />
               ))}
             </div>
+            {/* modal  */}
+            <Modal show={this.state.modalOpen} onHide={this.closeModal}>
+              <Modal.Header closeButton>
+                <Modal.Title>Movies Form</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form id="movies-form" onSubmit={(ev) => this.Save(ev)}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                      type="hidden"
+                      value={this.state.id}
+                      placeholder="Id"
+                    />
+                    <Form.Control
+                      type="text"
+                      value={this.state.title}
+                      placeholder="Title"
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Production</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={this.state.production}
+                      placeholder="Production"
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Director</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={this.state.director}
+                      placeholder="Director"
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Year</Form.Label>
+                    <Form.Select aria-label="Default select example">
+                      {year}
+                    </Form.Select>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>Cover</Form.Label>
+                    <Form.Control type="file" placeholder="Cover" />
+                  </Form.Group>
+                  <Figure>
+                    <Figure.Image
+                      width={80}
+                      height={90}
+                      alt="80x90"
+                      src={this.state.cover}
+                    />
+                  </Figure>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={this.closeModal}>
+                      Close
+                    </Button>
+                    <Button variant="primary" type="submit">
+                      Save
+                    </Button>
+                  </Modal.Footer>
+                </Form>
+              </Modal.Body>
+            </Modal>
           </Container>
         </div>
       </>

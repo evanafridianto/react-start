@@ -1,12 +1,18 @@
 import React from "react";
-import { Button, Card as Content, Row, Col, Container } from "react-bootstrap";
+import {
+  Button,
+  Card as Content,
+  ButtonGroup,
+  Col,
+  Container,
+} from "react-bootstrap";
 
 export default class Card extends React.Component {
   render() {
     return (
       <>
-        <div class="col">
-          <div class="card shadow-sm">
+        <Col>
+          <Content className="shadow-sm">
             <Content.Img
               width={200}
               height={350}
@@ -24,15 +30,17 @@ export default class Card extends React.Component {
                 <br />
                 Tahun : {this.props.year}
               </Content.Text>
-              <div class="d-flex justify-content-between align-items-center">
-                <div className="btn-group">
-                  <Button variant="outline-success">Edit</Button>
+              <div className="d-flex justify-content-between align-items-center">
+                <ButtonGroup>
+                  <Button variant="outline-success" onClick={this.props.onEdit}>
+                    Edit
+                  </Button>
                   <Button variant="outline-danger">Delete</Button>
-                </div>
+                </ButtonGroup>
               </div>
             </Content.Body>
-          </div>
-        </div>
+          </Content>
+        </Col>
       </>
     );
   }
