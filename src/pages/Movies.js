@@ -7,6 +7,8 @@ import {
   Figure,
   ModalBody,
 } from "react-bootstrap";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import "sweetalert2/dist/sweetalert2.css";
 import Card from "../components/Card";
 export default class Movies extends Component {
   constructor() {
@@ -50,7 +52,7 @@ export default class Movies extends Component {
             "https://upload.wikimedia.org/wikipedia/id/1/17/Laskar_Pelangi_film.jpg",
         },
       ],
-      modalOpen: false,
+      modalShow: false,
       action: "",
       id: "",
       title: "",
@@ -59,14 +61,33 @@ export default class Movies extends Component {
       year: 0,
       cover: "",
       selectedItem: null,
-    };
-  }
 
-  openModal = () => this.setState({ modalOpen: true });
-  closeModal = () => this.setState({ modalOpen: false });
+      keyword: "",
+      movieFilter: "",
+    };
+    this.state.movieFilter = this.state.movies;
+  }
+  modalClose = () => this.setState({ modalShow: false });
+  modalShow = () => this.setState({ modalShow: true });
+
+  searching = (e) => {
+    // if (e.keyCode === 13) {
+    let keyword = this.state.keyword.toLowerCase();
+    let movie = this.state.movies;
+    let result = movie.filter((item) => {
+      return (
+        item.title.toLowerCase().includes(keyword) ||
+        item.production.toLowerCase().includes(keyword) ||
+        item.director.toLowerCase().includes(keyword)
+      );
+    });
+    this.setState({ movieFilter: result });
+    // }
+  };
+
   resetForm = () => {
     this.setState({
-      id: Math.random(1, 10000000),
+      id: Math.floor(100000 + Math.random() * 900000),
       title: "",
       production: "",
       director: "",
@@ -75,12 +96,14 @@ export default class Movies extends Component {
       action: "insert",
     });
   };
+
   Add = () => {
-    this.openModal();
+    this.modalShow();
     this.resetForm();
   };
+
   Edit = (data) => {
-    this.openModal();
+    this.modalShow();
     this.setState({
       id: data.id,
       title: data.title,
@@ -89,12 +112,87 @@ export default class Movies extends Component {
       year: data.year,
       cover: data.cover,
       action: "update",
+      selectedItem: data,
     });
   };
+
+  Save = (event) => {
+    event.preventDefault();
+    let movie = this.state.movies;
+
+    if (this.state.action === "insert") {
+      Swal.fire({
+        title: "Good job!",
+        text: "Data saved successfully!",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      movie.push({
+        id: this.state.id,
+        title: this.state.title,
+        production: this.state.production,
+        director: this.state.director,
+        year: this.state.year,
+        cover: this.state.cover,
+      });
+    } else if (this.state.action === "update") {
+      let index = movie.indexOf(this.state.selectedItem);
+      movie[index].id = this.state.id;
+      movie[index].title = this.state.title;
+      movie[index].production = this.state.production;
+      movie[index].director = this.state.director;
+      movie[index].year = this.state.year;
+      movie[index].cover = this.state.cover;
+      Swal.fire({
+        title: "Good job!",
+        text: "Data updated successfully!",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
+
+    this.setState({ movie: movie });
+    this.modalClose();
+    this.resetForm();
+  };
+  Drop = (item) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this data!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // let movie = this.state.movies;
+        let movie = this.state.movieFilter;
+        let index = movie.indexOf(item);
+        movie.splice(index, 1);
+        this.setState({ buku: movie });
+
+        Swal.fire({
+          title: "Good job!",
+          text: "Data deleted successfully!",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+    });
+  };
+
   render() {
     var year = [];
-    for (let i = new Date().getFullYear(); i >= 1800; i--) {
-      year.push(<option value="{i}">{i}</option>);
+    for (let i = new Date().getFullYear(); i >= 2000; i--) {
+      year.push(
+        <option key={i} value={i}>
+          {i}
+        </option>
+      );
     }
     return (
       <>
@@ -103,9 +201,19 @@ export default class Movies extends Component {
             <Button variant="primary" onClick={() => this.Add()}>
               Add New
             </Button>
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mt-3">
-              {this.state.movies.map((item, index) => (
+            <Form.Group className="mt-3">
+              <Form.Control
+                type="text"
+                placeholder="Search"
+                value={this.state.keyword}
+                onChange={(e) => this.setState({ keyword: e.target.value })}
+                onKeyUp={(e) => this.searching(e)}
+              />
+            </Form.Group>
+            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mt-3">
+              {this.state.movieFilter.map((item, index) => (
                 <Card
+                  key={index}
                   title={item.title}
                   production={item.production}
                   director={item.director}
@@ -117,23 +225,39 @@ export default class Movies extends Component {
               ))}
             </div>
             {/* modal  */}
-            <Modal show={this.state.modalOpen} onHide={this.closeModal}>
-              <Modal.Header closeButton>
+            <Modal
+              show={this.state.modalShow}
+              onHide={this.state.modalShow}
+              backdrop="static"
+              keyboard={false}
+            >
+              <Modal.Header>
                 <Modal.Title>Movies Form</Modal.Title>
+                <Button
+                  variant="light"
+                  onClick={this.modalClose}
+                  className="btn-close"
+                ></Button>
               </Modal.Header>
-              <Modal.Body>
-                <Form id="movies-form" onSubmit={(ev) => this.Save(ev)}>
+              <ModalBody>
+                <Form onSubmit={(e) => this.Save(e)}>
                   <Form.Group className="mb-3">
                     <Form.Label>Title</Form.Label>
                     <Form.Control
                       type="hidden"
                       value={this.state.id}
+                      required
+                      name="id"
                       placeholder="Id"
+                      onChange={(e) => this.setState({ id: e.target.value })}
                     />
                     <Form.Control
                       type="text"
                       value={this.state.title}
+                      required
                       placeholder="Title"
+                      name="title"
+                      onChange={(e) => this.setState({ title: e.target.value })}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
@@ -141,7 +265,12 @@ export default class Movies extends Component {
                     <Form.Control
                       type="text"
                       value={this.state.production}
+                      required
                       placeholder="Production"
+                      name="production"
+                      onChange={(e) =>
+                        this.setState({ production: e.target.value })
+                      }
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
@@ -149,19 +278,36 @@ export default class Movies extends Component {
                     <Form.Control
                       type="text"
                       value={this.state.director}
+                      required
                       placeholder="Director"
+                      name="director"
+                      onChange={(e) =>
+                        this.setState({ director: e.target.value })
+                      }
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Year</Form.Label>
-                    <Form.Select aria-label="Default select example">
+                    <Form.Select
+                      aria-label="Year"
+                      name="year"
+                      value={this.state.year}
+                      onChange={(e) => this.setState({ year: e.target.value })}
+                    >
                       {year}
                     </Form.Select>
                   </Form.Group>
 
                   <Form.Group className="mb-3">
                     <Form.Label>Cover</Form.Label>
-                    <Form.Control type="file" placeholder="Cover" />
+                    <Form.Control
+                      type="text"
+                      value={this.state.cover}
+                      required
+                      placeholder="Cover"
+                      name="cover"
+                      onChange={(e) => this.setState({ cover: e.target.value })}
+                    />
                   </Form.Group>
                   <Figure>
                     <Figure.Image
@@ -172,7 +318,7 @@ export default class Movies extends Component {
                     />
                   </Figure>
                   <Modal.Footer>
-                    <Button variant="secondary" onClick={this.closeModal}>
+                    <Button variant="secondary" onClick={this.modalClose}>
                       Close
                     </Button>
                     <Button variant="primary" type="submit">
@@ -180,7 +326,7 @@ export default class Movies extends Component {
                     </Button>
                   </Modal.Footer>
                 </Form>
-              </Modal.Body>
+              </ModalBody>
             </Modal>
           </Container>
         </div>

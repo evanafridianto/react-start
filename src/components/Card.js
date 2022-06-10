@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Card as Content,
-  ButtonGroup,
-  Col,
-  Container,
-} from "react-bootstrap";
+import { Button, Card as Content, ButtonGroup, Col } from "react-bootstrap";
 
 export default class Card extends React.Component {
   render() {
@@ -24,18 +18,20 @@ export default class Card extends React.Component {
             <Content.Body>
               <Content.Title>{this.props.title}</Content.Title>
               <Content.Text>
-                Produksi : {this.props.production}
+                Production : {this.props.production}
                 <br />
-                Sutradara : {this.props.director}
+                Director : {this.props.director}
                 <br />
-                Tahun : {this.props.year}
+                Year : {this.props.year}
               </Content.Text>
               <div className="d-flex justify-content-between align-items-center">
                 <ButtonGroup>
                   <Button variant="outline-success" onClick={this.props.onEdit}>
                     Edit
                   </Button>
-                  <Button variant="outline-danger">Delete</Button>
+                  <Button variant="outline-danger" onClick={this.props.onDrop}>
+                    Delete
+                  </Button>
                 </ButtonGroup>
               </div>
             </Content.Body>
