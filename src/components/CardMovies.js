@@ -1,13 +1,13 @@
 import React from "react";
-import { Button, Card as Content, ButtonGroup, Col } from "react-bootstrap";
+import { Button, Card, ButtonGroup, Col } from "react-bootstrap";
 
-export default class Card extends React.Component {
+export default class CardMovies extends React.Component {
   render() {
     return (
       <>
         <Col>
-          <Content className="shadow-sm">
-            <Content.Img
+          <Card className="shadow-sm">
+            <Card.Img
               width={200}
               height={350}
               alt="200x200"
@@ -15,15 +15,15 @@ export default class Card extends React.Component {
               className="img mb-3"
               variant="top"
             />
-            <Content.Body>
-              <Content.Title>{this.props.title}</Content.Title>
-              <Content.Text>
+            <Card.Body>
+              <Card.Title>{this.props.title}</Card.Title>
+              <Card.Text>
                 Production : {this.props.production}
                 <br />
                 Director : {this.props.director}
                 <br />
                 Year : {this.props.year}
-              </Content.Text>
+              </Card.Text>
               <div className="d-flex justify-content-between align-items-center">
                 <ButtonGroup>
                   <Button variant="outline-success" onClick={this.props.onEdit}>
@@ -34,8 +34,8 @@ export default class Card extends React.Component {
                   </Button>
                 </ButtonGroup>
               </div>
-            </Content.Body>
-          </Content>
+            </Card.Body>
+          </Card>
         </Col>
       </>
     );

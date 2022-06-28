@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/dist/sweetalert2.css";
-import Card from "../components/Card";
+import CardMovies from "../components/CardMovies";
 export default class Movies extends Component {
   constructor() {
     super();
@@ -212,7 +212,7 @@ export default class Movies extends Component {
             </Form.Group>
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mt-3">
               {this.state.movieFilter.map((item, index) => (
-                <Card
+                <CardMovies
                   key={index}
                   title={item.title}
                   production={item.production}
